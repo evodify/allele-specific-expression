@@ -249,7 +249,7 @@ with open(args.input_to_phase) as datafile:
   print str(counterGenes), "genes"
 
 # Plot a histogram
-plt.hist(ratioAll, color="grey", bins=np.arange(0,1,0.05))
+plt.hist(ratioAll, color="grey", bins=np.arange(0,1.04,0.04))
 plt.xlim(0,1)
 plt.xticks(np.arange(0,1,0.1))
 plt.title("Allelic ratio", size = 20)
