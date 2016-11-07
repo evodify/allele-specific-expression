@@ -41,7 +41,7 @@ The script `phaseASEReadCounter_GeneSplit.py` produces several outputs, one of w
 ### Remove biased SNPs
 
 All the scripts and sample data are provided in the folder [find_biased_SNPs](find_biased_SNPs).
-The script `unbiasedSNPs_sampleList.R` takes as input the count data from the genomic DNA, where no ASE is expected and remove all SNPs that show highly biased allelic read counts. A diagnostic plot is also produced during the output.
+The script [find_unbiasedSNPs.R](find_biased_SNPs/find_unbiasedSNPs.R) takes as input the count data from the genomic DNA, where no ASE is expected and remove all SNPs that show highly biased allelic read counts. Diagnostic plots are produced during the output.
 
 To filter out highly biased SNPs run:
 
