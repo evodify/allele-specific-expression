@@ -1,4 +1,4 @@
- # Allele-specific expression
+# Allele-specific expression
 
 This repository contains code to implement the model of allele-specific 
 expression (ASE) described in Skelly et al. 2011 Genome Research 
