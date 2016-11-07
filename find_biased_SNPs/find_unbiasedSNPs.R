@@ -54,9 +54,10 @@ for (i in ff) {
   probs <- posteriorProbBiased(y=Y, n=N)
 
   # plot posterior probability biased:
-  jpeg(paste(i, 'jpeg', sep='.'))
+  jpeg(paste(i, 'jpeg2', sep='.'))
+  par(mar=c(5, 5, 3, 2), cex =1.5)
   hist(probs, col='grey80', main='Posterior Probability of ASE', 
-       xlab='probability', cex.axis=1.5, cex.main=1.5, cex.lab=1.5)
+       xlab='probability')
   dev.off()
   # Most SNPs should have P(biased) close to 0 or 1
   
@@ -65,5 +66,14 @@ for (i in ff) {
   biased[N == 0] <- TRUE  # filter out any SNPs with no data
   datUnbiased <- dnaD[!biased,]
   write.table(datUnbiased, paste(i, 'unbiased.csv', sep='_'), row.names =F)
+  
+  # plot allelic ratio of all and unbiased SNPs, to visualize the results of filtering.
+  jpeg(paste(i, 'unbiased.jpeg', sep='_'), width=960, height = 480)
+  par(mar=c(5, 5, 3, 2), cex =1.5, mfcol = c(1,2))
+  hist(dnaD$HomeologueAcount/(dnaD$HomeologueAcount + dnaD$HomeologueBcount), col='grey80', main='Allelic ratio (all SNPs)', ylab = "Frequency",
+       xlab='Proportion of the homeologue A')
+  hist(datUnbiased$HomeologueAcount/(datUnbiased$HomeologueAcount + datUnbiased$HomeologueBcount), col='grey80', main='Allelic ratio (unbiased SNPs)', ylab = "Frequency",
+       xlab='Proportion of the homeologue A')
+  dev.off()
   
 }
