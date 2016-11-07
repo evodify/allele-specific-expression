@@ -54,7 +54,7 @@ for (i in ff) {
   probs <- posteriorProbBiased(y=Y, n=N)
 
   # plot posterior probability biased:
-  jpeg(paste(i, 'jpeg2', sep='.'))
+  jpeg(paste(i, 'jpeg', sep='.'))
   par(mar=c(5, 5, 3, 2), cex =1.5)
   hist(probs, col='grey80', main='Posterior Probability of ASE', 
        xlab='probability')
