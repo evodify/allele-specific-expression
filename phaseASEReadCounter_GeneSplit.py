@@ -49,6 +49,15 @@ scaffold_1  2639    .   A   C   13  5   0.722222222222
 scaffold_1  2686    .   C   T   13  3   0.8125
 scaffold_1  2825    .   A   T   22  18  0.55
 
+# Skelly_output
+gene    variantID   HomeologueAcount    HomeologueBcount
+Carubv10010485m.g   1_1919  17  18
+Carubv10011809m.g   1_2618  14  4
+Carubv10011809m.g   1_2629  14  5
+Carubv10011809m.g   1_2639  13  5
+Carubv10011809m.g   1_2686  13  3
+Carubv10011809m.g   1_2825  22  18
+
 # Genes_output
 Gene    numberSNPS  HomeologueAmeanCount    HomeologueBmeanCount    TEST_DNA_stampy025.csv.meanRatio
 Carubv10010485m.g   1   17.0    18.0    0.485714285714
