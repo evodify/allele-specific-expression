@@ -47,13 +47,13 @@ Rscript unbiasedSNPs_sampleList.R input1.csv input2.csv input3.csv
 *The original code is provided in the directory [skelly_original/biased_SNPs](skelly_original/biased_SNPs).*
 
 ### Run DNA model
-The directory [DNA_model](DNA_model) provides code to implement the model
+The directory [skelly_original/DNA_model](skelly_original/DNA_model) provides code to implement the model
 for genomic DNA read counts that estimates overdispersion in this "null" data where 
 no genes should show ASE. This model is described in section 1.3.2 of the 
 supplementary material. See the README in that directory for more details.
 
 ### Run RNA model
-The directory [RNA_model](RNA_model) provides code to implement the model
+The directory [skelly_original/RNA_model](skelly_original/RNA_model) provides code to implement the model
 to detect ASE in read counts derived from RNA. This model is described in section 1.3.3 
 of the supplementary material. See the README in that directory for more details.
 
