@@ -119,12 +119,15 @@ homeologue2Count = []
 ratioList = []
 ratioAll = []
 
-outputSNPs = open("SNPs" + args.output, 'w')
-outputGenes = open("Genes" + args.output, 'w')
-outputSNPsOut = open("SNPs_OutOfGenes" + args.output, 'w')
-outputSNPs.write("contig\tposition\tvariantID\tHomeologueA\tHomeologueB\tHomeologueACount\tHomeologueBCount\t%s.Ratio\n" % args.input_to_phase)
-outputSNPsOut.write("contig\tposition\tvariantID\tHomeologueA\tHomeologueB\tHomeologueACount\tHomeologueBCount\t%s.Ratio\n" % args.input_to_phase)
+# create output files
+outputSNPs = open("SNPs" + args.output, 'w') # phased SNPs with counts and allelic ratio
+outputGenes = open("Genes" + args.output, 'w') # average counts and allelic ratio per gene
+skelly =  open("Skelly" + args.output, 'w') # input for the scripts by Skelly et al. 2011
+outputSNPsOut = open("SNPs_OutOfGenes" + args.output, 'w') # phased SNPs that are outside of genes' coordinates
 
+outputSNPs.write("contig\tposition\tvariantID\tHomeologueA\tHomeologueB\tHomeologueACount\tHomeologueBCount\t%s.Ratio\n" % args.input_to_phase)
+skelly.write("gene\tvariantID\tHomeologueAcount\tHomeologueBcount\n")
+outputSNPsOut.write("contig\tposition\tvariantID\tHomeologueA\tHomeologueB\tHomeologueACount\tHomeologueBCount\t%s.Ratio\n" % args.input_to_phase)
 outputGenes.write("Gene\tnumberSNPS\tHomeologueAmeanCount\tHomeologueBmeanCount\t%s.meanRatio\n" % args.input_to_phase)
 
 with open(args.input_to_phase) as datafile:
@@ -190,6 +193,9 @@ with open(args.input_to_phase) as datafile:
       geneNameOverlap = geneIntwords[3]
       counterGenesWithin += 1
       outputSNPs.write("%s\t%s\t%s\t%s\n" % (rowName, homeologueGT, homeologueCount, ratio))
+      row = [geneNameOverlap, Chr+'_'+Pos, homeologueCount]
+      rowP = '\t'.join(str(e) for e in row)
+      skelly.write("%s\n" % rowP)
       ratioAll.append(ratio)
     else:
       # if outside of a gene
@@ -243,10 +249,10 @@ with open(args.input_to_phase) as datafile:
   geneName = geneNameOverlap
   
   # print some stats
-  print "done!"
+  print "done!\n"
   print str(counterGenesOut), "SNPs outside of genes"
   print str(counterGenesWithin), "SNPs within genes"
-  print str(counterGenes), "genes"
+  print str(counterGenes), "genes\n"
 
 # Plot a histogram
 plt.hist(ratioAll, color="grey", bins=np.arange(0,1.04,0.04))
@@ -258,6 +264,7 @@ plt.ylabel("Frequency")
 plt.savefig("SNPs" + args.output +".pdf", dpi=90)
 
 outputSNPs.close()
+skelly.close()
 outputSNPsOut.close()
 outputGenes.close()
 datafile.close()
