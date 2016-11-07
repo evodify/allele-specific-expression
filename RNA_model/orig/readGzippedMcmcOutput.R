@@ -1,1 +1,0 @@
-../../DNA_model/orig/readGzippedMcmcOutput.R
