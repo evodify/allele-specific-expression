@@ -23,35 +23,37 @@ java -Xmx4g -jar GenomeAnalysisTK.jar \
 
 These allelic accounts are then phased using the information on the phasing state:
 
-```python phaseASEReadCounter_GeneSplit.py -i ASEReadCounter.table -r reference.file -g genes.bed -o _output
+```
+python phaseASEReadCounter_GeneSplit.py -i ASEReadCounter.table -r reference.file -g genes.bed -o _output
 ```
 
 The code to obtain the `reference.file`is provided in the [genome-phasing repository](https://github.com/evodify/genome-phasing). For the format of all input and output files see the code of [phaseASEReadCounter_GeneSplit.py](phaseASEReadCounter_GeneSplit.py).
 
-The script *phaseASEReadCounter_GeneSplit.py* produces several outputs, one of which is used as input to the scripts originally developed by Skelly et al. 2011. Genome Research [doi:10.1101/gr.119784.110](https://dx.doi.org/10.1101/gr.119784.110). These scripts have been forked from [daskelly/ase](https://github.com/daskelly/ase) and slightly modified.
+The script `phaseASEReadCounter_GeneSplit.py` produces several outputs, one of which is used as input to the scripts originally developed by Skelly et al. 2011. Genome Research [doi:10.1101/gr.119784.110](https://dx.doi.org/10.1101/gr.119784.110). These scripts have been forked from https://github.com/daskelly/ase and slightly modified. The original scripts used for modification are provided in the folder [skelly_original](skelly_original).
 
 ## Run the scripts by Skelly et al.
 
+### Remove biased SNPs
 
-The directory [biased_SNPs](biased_SNPs) provides code to implement the model
-for detecting biased SNPs from DNA data. These SNPs are then filtered out for all
-subsequent analyses. This model is described in section S1.3.1 of the 
-supplementary material. See the README in that directory for more details.
+All the scripts and sample data are provided in the folder [find_biased_SNPs](find_biased_SNPs).
+The script `unbiasedSNPs_sampleList.R` takes as input the count data from the genomic DNA, where no ASE is expected and remove all SNPs that show highly biased allelic read counts. A diagnostic plot is also produced during the output.
 
+To filter out highly biased SNPs run:
+
+```
+Rscript unbiasedSNPs_sampleList.R input1.csv input2.csv input3.csv 
+```
+
+*The original code is provided in the directory [skelly_original/biased_SNPs](skelly_original/biased_SNPs).*
+
+### Run DNA model
 The directory [DNA_model](DNA_model) provides code to implement the model
 for genomic DNA read counts that estimates overdispersion in this "null" data where 
 no genes should show ASE. This model is described in section 1.3.2 of the 
 supplementary material. See the README in that directory for more details.
 
+### Run RNA model
 The directory [RNA_model](RNA_model) provides code to implement the model
 to detect ASE in read counts derived from RNA. This model is described in section 1.3.3 
 of the supplementary material. See the README in that directory for more details.
 
-[This tutorial](tutorial.pdf) (PDF) provides an overview of how to use
-scripts in the `DNA_model/orig` and `RNA_model/orig` directories to implement
-our statistical model for ASE. These are the scripts that were originally
-released with the paper and are available on the *Genome Research*
-website as supplementary information. They have a few corrections from
-the exact code published on the *Genome Research* website to account for
-bugs discovered after publication as well as changes to dependencies 
-that the code utilizes.
