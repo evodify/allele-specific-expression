@@ -1,6 +1,9 @@
 # Allele-specific expression
 
-This repository contains code to perform allele-specific expression analysis (ASE) using hierarchical Bayesian model that utilize the information on both DNA and RNA variation and allow both global and locus-specific inferences about allele-specific expression. This particular instruction is adopted to analyze the data of *Capsella bursa-pastoris* (Brassicaceae). 
+This repository contains code to perform allele-specific expression analysis (ASE) using hierarchical Bayesian model that utilize the information on both DNA and RNA variation and allow both global and locus-specific inferences about allele-specific expression ([Skelly et al. 2011](https://dx.doi.org/10.1101/gr.119784.110)).
+
+This particular instruction is adopted to analyze the data of *Capsella bursa-pastoris* (Brassicaceae). 
+
 
 ## Obtain count data
 
@@ -21,17 +24,19 @@ java -Xmx4g -jar GenomeAnalysisTK.jar \
   -o ASEReadCounter.table
 ```
 
-These allelic accounts are then phased using the information on the phasing state:
+These allelic counts are then phased using the information on the phasing state:
 
 ```
 python phaseASEReadCounter_GeneSplit.py -i ASEReadCounter.table -r reference.file -g genes.bed -o _output
 ```
 
-The code to obtain the `reference.file`is provided in the [genome-phasing repository](https://github.com/evodify/genome-phasing). For the format of all input and output files see the code of [phaseASEReadCounter_GeneSplit.py](phaseASEReadCounter_GeneSplit.py).
+For the format of all input and output files see the code of [phaseASEReadCounter_GeneSplit.py](phaseASEReadCounter_GeneSplit.py). The code to obtain the `reference.file`is provided in the [genome-phasing repository](https://github.com/evodify/genome-phasing).
 
-The script `phaseASEReadCounter_GeneSplit.py` produces several outputs, one of which is used as input to the scripts originally developed by Skelly et al. 2011. Genome Research [doi:10.1101/gr.119784.110](https://dx.doi.org/10.1101/gr.119784.110). These scripts have been forked from https://github.com/daskelly/ase and slightly modified. The original scripts used for modification are provided in the folder [skelly_original](skelly_original).
 
 ## Run the scripts by Skelly et al.
+
+The script `phaseASEReadCounter_GeneSplit.py` produces several outputs, one of which is used as input to the scripts originally developed by [Skelly et al. (2011)](https://dx.doi.org/10.1101/gr.119784.110). These scripts have been forked from https://github.com/daskelly/ase and slightly modified. The original scripts used for modification are provided in the folder [skelly_original](skelly_original).
+
 
 ### Remove biased SNPs
 
