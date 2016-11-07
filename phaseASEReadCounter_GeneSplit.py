@@ -270,7 +270,7 @@ plt.xticks(np.arange(0,1.1,0.1))
 plt.title("Allelic ratio", size = 20)
 plt.xlabel("Proportion of the homeologue A")
 plt.ylabel("Frequency")
-plt.savefig("SNPs" + args.output +".pdf", dpi=90)
+plt.savefig("SNPs" + args.output +".png", dpi=90)
 
 outputSNPs.close()
 skelly.close()
