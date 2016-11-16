@@ -61,7 +61,7 @@ For the format of all input and output files see the code of [phaseASEReadCounte
 
 ## Run the scripts by Skelly et al.
 
-The script `phaseASEReadCounter_GeneSplit.py` produces several outputs, one of which is used as input for the scripts originally developed by [Skelly et al. (2011)](https://dx.doi.org/10.1101/gr.119784.110). These scripts have been forked from https://github.com/daskelly/ase and slightly modified. The original scripts used for modification are provided in the folder [skelly_original](skelly_original).
+The script [phaseASEReadCounter_GeneSplit.py](phaseASEReadCounter_GeneSplit.py) produces several outputs, one of which is used as input for the scripts originally developed by [Skelly et al. (2011)](https://dx.doi.org/10.1101/gr.119784.110). These scripts have been forked from https://github.com/daskelly/ase and slightly modified. The original scripts used for modification are provided in the folder [skelly_original](skelly_original).
 
 
 ### Remove biased SNPs
