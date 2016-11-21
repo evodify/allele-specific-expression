@@ -136,4 +136,4 @@ sh merge_ASE_Gene.sh RNAinput1_unbiased_allASE.csv Genes_RNAinput1.csv
 
 ## Possible problems
 
-Both [DNAmodel_exctract_results.R](DNA_model/DNAmodel_exctract_results.R) and [RNAmodel_exctract_results.R](RNA_model/RNAmodel_exctract_results.R) source [GzippedMcmcOutput.R](DNA_model/readGzippedMcmcOutput.R that may not work correctly with R/3.0.0 and later. The error message states `In readLines(file.gz): seek on a gzfile connection returned an internal error`. **It worked only in R/2.13.0** for me.
+Both [DNAmodel_exctract_results.R](DNA_model/DNAmodel_exctract_results.R) and [RNAmodel_exctract_results.R](RNA_model/RNAmodel_exctract_results.R) source [readGzippedMcmcOutput.R](DNA_model/readGzippedMcmcOutput.R) that may not work correctly with R/3.0.0 and later. The error message states `In readLines(file.gz): seek on a gzfile connection returned an internal error`. **It worked only in R/2.13.0** for me.
