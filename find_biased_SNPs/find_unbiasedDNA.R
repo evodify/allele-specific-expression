@@ -32,29 +32,31 @@ posteriorProbBiased <- function(y, n) {
 }
 
 # loop through all the files
-for (i in ff) {
+for (file in ff) {
 
-  dnaD <- na.omit(read.table(i, header = T, na.strings = 'NA'))
+  dnaD <- na.omit(read.table(file, header = T, na.strings = 'NA'))
+  message('\n')
+  message(paste(file, 'loaded\n', sep=' '))
   dnaD$total <- apply(dnaD[, c(3,4)], 1, sum)
   
-  n.snps <- length(dnaD$gene)
-  mat <- data.frame(Y=dnaD$HomeologueAcount, N=dnaD$total)
+  n.snps <- length(dnaD[,1])
+  mat <- data.frame(Y=dnaD[,3], N=dnaD$total)
   mat$p <- apply(mat, 1, function(row) binom.test(row[1], row[2])$p.value)
   
 
   isNull <- rep(NA, n.snps)
   isNull[which.min(mat$p)] <- FALSE
   isNull[which.max(mat$p)] <- TRUE
-  datlist <- list(nsnps=n.snps, Y=dnaD$HomeologueAcount, N=dnaD$total)
+  datlist <- list(nsnps=n.snps, Y=dnaD[,3], N=dnaD$total)
   
   source('biased_snps_rjags.R')
   
-  Y <- dnaD$HomeologueAcount
+  Y <- dnaD[,3]
   N <- dnaD$total
   probs <- posteriorProbBiased(y=Y, n=N)
 
   # plot posterior probability biased:
-  jpeg(paste(i, 'jpeg', sep='.'))
+  jpeg(paste(file, 'jpeg', sep='.'))
   par(mar=c(5, 5, 3, 2), cex =1.5)
   hist(probs, col='grey80', main='Posterior Probability of ASE', 
        xlab='probability')
@@ -65,15 +67,16 @@ for (i in ff) {
   biased <- probs > 0.5  # filter out any SNPs with P(biased) > 0.5
   biased[N == 0] <- TRUE  # filter out any SNPs with no data
   datUnbiased <- dnaD[!biased,]
-  write.table(datUnbiased, paste(i, 'unbiased.csv', sep='_'), row.names =F)
+  write.table(datUnbiased, paste(file, 'unbiased.csv', sep='_'), row.names =F)
   
   # plot allelic ratio of all and unbiased SNPs, to visualize the results of filtering.
-  jpeg(paste(i, 'unbiased.jpeg', sep='_'), width=960, height = 480)
+  jpeg(paste(file, 'unbiased.jpeg', sep='_'), width=960, height = 480)
   par(mar=c(5, 5, 3, 2), cex =1.5, mfcol = c(1,2))
-  hist(dnaD$HomeologueAcount/(dnaD$HomeologueAcount + dnaD$HomeologueBcount), col='grey80', main='Allelic ratio (all SNPs)', ylab = "Frequency",
+  hist(dnaD[,3]/(dnaD[,3] + dnaD[,4]), col='grey80', main='Allelic ratio (all SNPs)', ylab = "Frequency",
        xlab='Proportion of the homeologue A')
-  hist(datUnbiased$HomeologueAcount/(datUnbiased$HomeologueAcount + datUnbiased$HomeologueBcount), col='grey80', main='Allelic ratio (unbiased SNPs)', ylab = "Frequency",
+  hist(datUnbiased[,3]/(datUnbiased[,3] + datUnbiased[,4]), col='grey80', main='Allelic ratio (unbiased SNPs)', ylab = "Frequency",
        xlab='Proportion of the homeologue A')
   dev.off()
-  
+  message('\n')
+  message(paste(file, 'processed\n', sep=' '))
 }
