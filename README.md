@@ -1,6 +1,6 @@
 # Allele-specific expression
 
-This repository contains code to perform allele-specific expression analysis (ASE) using hierarchical Bayesian model that utilize the information on both DNA and RNA variation and allow both global and locus-specific inferences about allele-specific expression ([Skelly et al. 2011](https://dx.doi.org/10.1101/gr.119784.110)).
+This repository contains code to perform allele-specific expression analysis (ASE) using hierarchical Bayesian model that utilizes the information on both DNA and RNA variation ([Skelly et al. 2011](https://dx.doi.org/10.1101/gr.119784.110)).
 
 This particular instruction is adopted to analyze the data of *Capsella bursa-pastoris* (Brassicaceae). 
 
