@@ -137,7 +137,7 @@ outputSNPsOut = open("SNPs_OutOfGenes" + args.output, 'w') # phased SNPs that ar
 outputSNPs.write("contig\tposition\tvariantID\tHomeologueA\tHomeologueB\tHomeologueACount\tHomeologueBCount\t%s.Ratio\n" % args.input_to_phase)
 skelly.write("gene\tvariantID\tHomeologueAcount\tHomeologueBcount\n")
 outputSNPsOut.write("contig\tposition\tvariantID\tHomeologueA\tHomeologueB\tHomeologueACount\tHomeologueBCount\t%s.Ratio\n" % args.input_to_phase)
-outputGenes.write("Gene\tnumberSNPS\tHomeologueAmeanCount\tHomeologueBmeanCount\t%s.meanRatio\n" % args.input_to_phase)
+outputGenes.write("gene\tnumber_of_SNPs\tHomeologueA_meanCount\tHomeologueB_meanCount\t%s.meanRatio\n" % args.input_to_phase)
 
 with open(args.input_to_phase) as datafile:
 

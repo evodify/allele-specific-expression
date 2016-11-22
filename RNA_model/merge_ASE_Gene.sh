@@ -7,7 +7,9 @@
 #
 # sh merge_ASE_Gene.sh RNAinput1_unbiased_allASE.csv Genes_RNAinput1.csv
 
+echo -e "gene\tASE_prob\tnumber_of_SNPs\thomeologueA_count\thomeologueB_count\tproportion_of_homeologueA
+" > header_temp
 sort $1 > $1_temp
 sort $2 > $2_temp
-join -j 1 $1_temp $2_temp > $2_mergedASE.csv
+cat header_temp | join -j 1 $1_temp $2_temp > $2_mergedASE.csv
 rm *_temp
