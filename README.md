@@ -85,6 +85,14 @@ The script [extract_unbiasedRNA.sh](find_biased_SNPs/extract_unbiasedRNA.sh) ext
 ```
 sh extractUnbiased.sh DNAinput1_unbiased.csv RNAinput.csv
 ``` 
+To keep only SNPs that overlap in DNA and RNA data, remove DNA SNPs that do not exist on the unbiased RNA data:
+
+```
+sh extractUnbiased.sh RNAinput1.csv_unbiased.csv DNAinput1_unbiased.csv
+```
+
+The file `DNAinput1_unbiased.csv_unviased.csv` is then used to fir the DNA model.
+
 
 ### DNA model
 
@@ -93,7 +101,7 @@ The DNA counts data is used to estimates overdispersion in the null data where
 should be no ASE.
 
 ```
-Rscript DNAmodel.R DNAinput1_unbiased.csv DNAinput1_unbiased.gz 100000 50 2000
+Rscript DNAmodel.R DNAinput1_unbiased.csv_unbised.csv DNAinput1_unbiased.gz 200000 100 5000
 ```
 where 100000 is the number of iterations of MCMC, 50 is thin interval, 2000 is the number of scaling iterations. These parameters can be changed.
 
@@ -112,7 +120,7 @@ The values of a.hat and d.hat will be written to the file 'a.hat_d.hat.txt', the
 #### Run the RNA model
 
 ```
-Rscript RNAmodel.R --n.iter=200000 --thin=50 --n.scaling.iter=2000 --a.hat=80 --d.hat=160 --max.rounds.of.scaling=8 RNAinput1_unbiased.csv RNAinput1_unbiased.gz
+Rscript RNAmodel.R --n.iter=200000 --thin=100 --n.scaling.iter=5000 --a.hat=80 --d.hat=160 --max.rounds.of.scaling=8 RNAinput1_unbiased.csv RNAinput1_unbiased.gz
 ```
 `--a.hat=` and `--d.hat=` use the values obtained in the previous stem for the DNA model.
 
