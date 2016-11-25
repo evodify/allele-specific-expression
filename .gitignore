@@ -3,3 +3,4 @@
 *test*
 run_*.sh
 *.log
+.Rhistory
