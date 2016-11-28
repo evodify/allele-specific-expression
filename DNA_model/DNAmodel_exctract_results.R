@@ -19,7 +19,8 @@ for (i in c(1:length(ff))) {
   outputList[i,] <- c(ff[i], a.hat, d.hat)
   # plot
   jpeg(paste(ff[i], 'jpeg', sep='_'), width=960, height = 480)
-  par(mar=c(5, 5, 3, 2), cex =1.5, mfcol = c(1,2))
+  par(mar=c(5, 5, 3, 2), mfcol = c(1,2))
+  par(cex=1)
   hist(exp(result$mcmc$logA[burnin:n.iter]), breaks = 50,
        main='Distribution of a', xlab='a')
   abline(v = a.hat, col ='red', lwd = 2)
