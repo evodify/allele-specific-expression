@@ -12,6 +12,7 @@ colnames(outputList) <-	c('name', 'a.hat', 'd.hat')
 # loop through all the files
 for (i in c(1:length(ff))) {
   result <- read.mcmc(ff[i])
+  message(paste(ff[i], 'loaded\n', sep=' '))
   n.iter <- result$n.iter/result$thin
   burnin <- 0.1*n.iter
   a.hat <- median(exp(result$mcmc$logA[burnin:n.iter]))
@@ -28,6 +29,7 @@ for (i in c(1:length(ff))) {
        col='grey80', main='Distribution of d', xlab='d')
   abline(v = d.hat, col ='red', lwd = 2)
   dev.off()
+  message(paste(ff[i], 'processed\n', sep=' '))
 }
 
 write.table(outputList, "a.hat_d.hat.txt", row.names = F)
