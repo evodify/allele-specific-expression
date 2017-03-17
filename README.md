@@ -86,10 +86,10 @@ The script [extract_unbiasedRNA.sh](find_biased_SNPs/extract_unbiasedRNA.sh) ext
 sh extractUnbiased.sh DNAinput1_unbiased.csv RNAinput.csv
 ```
 
-To get unbiased counts and allelic ratio per gene, the SNP counts can be merged by genes:
+To get unbiased counts and allelic ratio per gene, the SNP counts can be merged by genes with [merge_by_Genes.sh](/find_biased_SNPs/merge_by_Genes.sh):
 
 ```
-sh merge_ASE_by_Gene.sh RNAinput1_unbiased.csv
+sh merge_by_Genes.sh RNAinput1_unbiased.csv
 ```
 
 To keep only SNPs that overlap in DNA and RNA data, remove DNA SNPs that do not exist on the unbiased RNA data:
@@ -145,7 +145,7 @@ The significance threshold 0.99 can be changed by editing `cutoff <- 0.99` in [R
 This script also report the distribution of estimates statistics which should be explored for the convergence between different runs.
 
 
-Optionally, the results of ASE analysis (files `*_signASE.csv`,`*_allASE.csv`) can be merged with all the expression information (`Genes_*` files):
+Optionally, the script [merge_ASE_with_Gene.sh](RNA_model/merge_ASE_with_Gene.sh) can be used to merge the results of ASE analysis (files `*_signASE.csv`,`*_allASE.csv`) with all the expression information (`Genes_*` files):
 
 ```
 sh merge_ASE_with_Gene.sh RNAinput1_unbiased_allASE.csv Genes_RNAinput1_unbiased.csv
