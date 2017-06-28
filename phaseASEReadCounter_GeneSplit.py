@@ -156,11 +156,16 @@ with open(args.input_to_phase) as datafile:
     rowName = '\t'.join(str(e) for e in chr_pos_id)
 
     # find corresponding gene coordinates if such exist
-    while int(geneIntChr) < int(Chr) or (int(geneIntChr) == int(Chr) and int(geneIntEnd) < int(Pos)):
-      geneIntwords = geneIntervals.readline().split()
-      geneIntChr = geneIntwords[0].split('_')[1]
-      geneIntStart = geneIntwords[1]
-      geneIntEnd = geneIntwords[2]
+    try:
+      while int(geneIntChr) < int(Chr) or (int(geneIntChr) == int(Chr) and int(geneIntEnd) < int(Pos)):
+        geneIntwords = geneIntervals.readline().split()
+        geneIntChr = geneIntwords[0].split('_')[1]
+        geneIntStart = geneIntwords[1]
+        geneIntEnd = geneIntwords[2]
+    except Exception as e:
+      coordToPrint = '\t'.join(str(e) for e in chr_pos_id[0:2])
+      print("\nThe end of %s is reached.\nSites following %s are probably outside of genes.\nCheck your input files and make sure this is correct.\n" % (args.gene_intervals, chr_pos_id[0:2]))
+      break
 
     # find corresponding reference genotypes if such exist
     while int(refChr) < int(Chr) or (int(refChr) == int(Chr) and int(refPos) < int(Pos)):
@@ -258,10 +263,9 @@ with open(args.input_to_phase) as datafile:
   geneName = geneNameOverlap
   
   # print some stats
-  print "done!\n"
-  print str(counterGenesOut), "SNPs outside of genes"
-  print str(counterGenesWithin), "SNPs within genes"
-  print str(counterGenes), "genes\n"
+  print str(counterGenesOut), "SNPs outside of genes."
+  print str(counterGenesWithin), "SNPs within genes."
+  print str(counterGenes), "genes.\n"
 
 # Plot a histogram
 plt.hist(ratioAll, color="grey", bins=np.arange(0,1.04,0.04))
