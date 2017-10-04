@@ -39,13 +39,13 @@ import argparse, sys
 
 ############################# options #############################
 
-class MyParser(argparse.ArgumentParser): 
+class CommandLineParser(argparse.ArgumentParser): 
    def error(self, message):
       sys.stderr.write('error: %s\n' % message)
       self.print_help()
       sys.exit(2)
 
-parser = MyParser()
+parser = CommandLineParser()
 parser.add_argument('-i', '--input', help = 'name of the input file', type=str, required=True)
 parser.add_argument('-o', '--output', help = 'name of the output file', type=str, required=True)
 args = parser.parse_args()
