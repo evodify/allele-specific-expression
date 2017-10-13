@@ -4,6 +4,110 @@ This repository contains code to perform allele-specific expression analysis (AS
 
 This particular instruction is adopted to analyze the data of *Capsella bursa-pastoris* (Brassicaceae).
 
+## Map reads to the reference genome
+
+### Mask the variant sites in the reference
+
+Mapping bias is a major problem in this analysis. Masking the varian sites helps a lot to reduce the mapping bias. I did in in the following way.
+
+#### Create a BED file of regions to mask
+
+Create a BED file from SNPs and Indels VCFs:
+```
+zcat SNPs.vcf.gz | grep -v ^# | awk '{printf "%s\t%s\t%s\n", $1,$2-1,$2}' > SNPs.bed
+
+zcat INDELs.vcf.gz | grep -v ^# | awk 'length($4) != 1 {printf "%s\t%s\t%s\t\n", $1,$2-1,$2+length($4)-1}' > heter_INDELs.bed
+```
+
+Using [bedtools](http://bedtools.readthedocs.io/en/latest/), merge the overlapping intervals in the BED files
+```
+bedtools merge -i SNPs.bed > SNPs.merged.bed
+bedtools merge -i INDELs.bed > INDELs.merged.bed
+```
+Merge the BED files obtained from VCFs and the BED file describing repetitive regions:
+```
+cat SNPs.merged.bed INDELs.merged.bed repetitiveRegions.bed | sort -V > SNPs-INDELs_repeats.bed
+```
+Merge the overlapping intervals:
+```
+bedtools merge -i SNPs-INDELs_repeats.bed > SNPs-INDELs_repeats.merged.bed
+```
+#### Mask variant sites and repetitive regions in the reference
+
+```
+bedtools maskfasta -fi reference.fa -bed SNPs-INDELs_repeats.merged.bed -fo reference_masked.fa
+```
+
+### Map the reads
+
+#### Prepare the reference
+
+This analysis will require both normal reference and masked reference files:
+
+```
+java -Xmx4g -jar CreateSequenceDictionary.jar R=reference_masked.fa O=reference_masked.dict
+samtools faidx reference_masked.fa
+
+java -Xmx4g -jar CreateSequenceDictionary.jar R=reference.fa O=reference.dict
+samtools faidx reference.fa
+```
+
+
+#### Map with stampy
+
+[Stampy](http://www.well.ox.ac.uk/project-stampy) requires python2.6.
+
+Prepare the reference files:
+
+```
+./stampy.py --species=referenceName --assembly=referenceMasked -G referenceMasked reference_masked.fa.gz
+./stampy.py -g referenceMasked -H referenceMasked
+
+```
+
+Perform the alignment of both DNA and RNA reads to the reference.
+```
+./stampy.py -t16 -g referenceMasked -h referenceMasked -o sample1.sam -M sample1_R1.fastq.gz sample1_R2.fastq.gz
+```
+*where -t16 means to use 16 cores in a multithreaded processor.*
+
+#### Prepare BAM file
+
+Convert SAM to BAM and sort BAM file with [samtools](http://www.htslib.org/):
+```
+samtools view -bS -@ 16 sample1.sam > sample1.bam
+samtools sort -@ 16 sample1.bam -o sample1_sorted.bam
+samtools index sample1_sorted.bam
+```
+
+Add groups:
+```
+java -Xmx6g -jar ~/Programs/picard-tools/AddOrReplaceReadGroups.jar \
+  I=sample1_sorted.bam \
+  O=sample1_sorted_GroupAdded.bam \
+  RGLB=speciesName RGPL=illumina RGPU=DJG63NM1 RGSM=TY118
+samtools index sample1_sorted_GroupAdded.bam
+```
+*RGPU should be specified with lane id (can be seen in a fastq file name or in reads information).*
+
+Mark duplicated reads:
+```
+java -Xmx6g -jar ~/Programs/picard-tools/MarkDuplicates.jar \
+  I=sample1_sorted_GroupAdded.bam \
+  O=sample1_sorted_GroupAdded_MarkDupl.bam \
+  CREATE_INDEX=true VALIDATION_STRINGENCY=SILENT \
+  M=sample1_sorted_GroupAdded_MarkDupl.metrics
+```
+Split N cigar reads:
+```
+java -Xmx6g -jar ~/Programs/GATK/GenomeAnalysisTK.jar \
+ -T SplitNCigarReads \
+ -R ~/reference/Crubella_183_SNPs-INDELs_repeats_masked.fa  \
+ -I sample1_sorted_GroupAdded_MarkDupl.bam \
+ -U ALLOW_N_CIGAR_READS \
+ -o sample1_sorted_GroupAdded_MarkDupl_split.bam
+```
+*If you use STAR and some other alignment software, you also need to include mapping quality reassignment*
 
 ## Obtain count data
 
@@ -12,7 +116,7 @@ The allelic expression counts are generated using [ASEReadCounter](https://softw
 
 ### Generate reference VCF
 
-Extract one sample from a multisample VCF.
+Extract one sample from a multisample VCF that is obtained from the DNA sequence data (or RNA data).
 
 ```
 java -Xmx4g -jar GenomeAnalysisTK.jar \
@@ -39,14 +143,14 @@ The allelic expression counts are generated using [ASEReadCounter](https://softw
 java -Xmx4g -jar GenomeAnalysisTK.jar \
   -T ASEReadCounter \
   -R reference.fa \
-  -I sample1.bam \
+  -I sample1_sorted_GroupAdded_MarkDupl_split.bam \
   -sites sample1.modif.vcf \
   -U ALLOW_N_CIGAR_READS \
   -minDepth 10 \
   --minBaseQuality 20 \
   --minMappingQuality 30 \
   --includeDeletions \
-  --outputFormat RTABLE
+  --outputFormat RTABLE \
   -o sample1.ASEReadCounter.table
 ```
 
@@ -154,4 +258,4 @@ sh merge_ASE_with_Gene.sh RNAinput1_unbiased_allASE.csv Genes_RNAinput1_unbiased
 ## Possible problems
 
 Both [DNAmodel_exctract_results.R](DNA_model/DNAmodel_exctract_results.R) and [RNAmodel_exctract_results.R](RNA_model/RNAmodel_exctract_results.R) source [readGzippedMcmcOutput.R](DNA_model/readGzippedMcmcOutput.R) that may not work correctly with R/3.0.0 and later. The error message states `In readLines(file.gz): seek on a gzfile connection returned an internal error`. It worked only in **R/2.13.0** for me.
-Another workaround is to use uncompressed input (gunzip), but [readGzippedMcmcOutput.R](DNA_model/readGzippedMcmcOutput.R) has to be edited for this type of imput.
+Another workaround is to use uncompressed input (gunzip), but [readGzippedMcmcOutput.R](DNA_model/readGzippedMcmcOutput.R) has to be edited for this type of input.
