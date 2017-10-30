@@ -168,15 +168,20 @@ with open(args.input_to_phase) as datafile:
       break
 
     # find corresponding reference genotypes if such exist
-    while int(refChr) < int(Chr) or (int(refChr) == int(Chr) and int(refPos) < int(Pos)):
-      Refwords = RefFile.readline().split()
-      refChr = Refwords[0].split('_')[1]
-      refPos = Refwords[1]
-    if int(refChr) == int(Chr) and int(refPos) == int(Pos):
-      RefGT = Refwords[2:4]
-    else:
+    try:
+      while int(refChr) < int(Chr) or (int(refChr) == int(Chr) and int(refPos) < int(Pos)):
+        Refwords = RefFile.readline().split()
+        refChr = Refwords[0].split('_')[1]
+        refPos = Refwords[1]
+      if int(refChr) == int(Chr) and int(refPos) == int(Pos):
+        RefGT = Refwords[2:4]
+      else:
+        RefGT = ['N', 'N']
+    except Exception as e:
       RefGT = ['N', 'N']
-      
+      print("\nThe end of %s is reached.\nPosition %s doesn\t exist in of the reference SNPs.\nMake sure this is correct.\n" % (RefFile, chr_pos_id[0:2]))
+      break
+
     # define the phasing state
     phasedS = phase_state(GT, RefGT)
     
