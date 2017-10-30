@@ -179,7 +179,7 @@ with open(args.input_to_phase) as datafile:
         RefGT = ['N', 'N']
     except Exception as e:
       RefGT = ['N', 'N']
-      print("\nThe end of %s is reached.\nPosition %s doesn\t exist in of the reference SNPs.\nMake sure this is correct.\n" % (RefFile, chr_pos_id[0:2]))
+      print("\nPosition %s doesn't exist in %s. All the following positions will be skipped.\n" % (chr_pos_id[0:2], args.phasing_reference))
       break
 
     # define the phasing state
