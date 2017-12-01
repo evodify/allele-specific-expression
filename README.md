@@ -8,7 +8,7 @@ This particular instruction is adopted to analyze the data of *Capsella bursa-pa
 
 ### Mask the variant sites in the reference
 
-Mapping bias is a major problem in this analysis. Masking the varian sites helps a lot to reduce the mapping bias. I did in in the following way.
+Mapping bias is a major problem in this analysis. Masking the variant sites helps to reduce the mapping bias. Here is one of the ways you can approach this problem.
 
 #### Create a BED file of regions to mask
 
@@ -18,6 +18,7 @@ zcat SNPs.vcf.gz | grep -v ^# | awk '{printf "%s\t%s\t%s\n", $1,$2-1,$2}' > SNPs
 
 zcat INDELs.vcf.gz | grep -v ^# | awk 'length($4) != 1 {printf "%s\t%s\t%s\t\n", $1,$2-1,$2+length($4)-1}' > heter_INDELs.bed
 ```
+*Be careful with masking indels, if there are many indels, masking them may result is spurious mapping later.*
 
 Using [bedtools](http://bedtools.readthedocs.io/en/latest/), merge the overlapping intervals in the BED files
 ```
@@ -249,7 +250,7 @@ The significance threshold 0.99 can be changed by editing `cutoff <- 0.99` in [R
 This script also report the distribution of estimates statistics which should be explored for the convergence between different runs.
 
 
-Optionally, the script [merge_ASE_with_Gene.sh](RNA_model/merge_ASE_with_Gene.sh) can be used to merge the results of ASE analysis (files `*_signASE.csv`,`*_allASE.csv`) with all the expression information (`Genes_*` files):
+Optionally, the script [merge_ASE_with_Gene.sh](RNA_model/merge_ASE_with_Gene.sh) can be used to merge the results of ASE analysis (files `*_signASE.csv`,`*_allASE.csv`) with all the expression information (`Genes_*_unviased.csv` files):
 
 ```
 sh merge_ASE_with_Gene.sh RNAinput1_unbiased_allASE.csv Genes_RNAinput1_unbiased.csv
