@@ -9,6 +9,6 @@
 
 sed 's/"//g' $1 | sort > $1_temp
 sed 's/"//g' $2 | sort > $2_temp
-join -j 1 $1_temp $2_temp | sed 's/ /\t/g;1i\gene\tASE_prob\tnumber_of_SNPs\thomeologueA_count\thomeologueB_count\tproportion_of_homeologueA' > $2_mergedASE.csv
+join -j 1 $1_temp $2_temp | sed 's/ /\t/g;1i\gene\tASE_prob\tnumber_of_SNPs\tproportion_of_homeologueA' > $1_mergedASE.csv
 rm $1_temp $2_temp
  
