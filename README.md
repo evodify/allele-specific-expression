@@ -260,3 +260,5 @@ sh merge_ASE_with_Gene.sh RNAinput1_unbiased_allASE.csv Genes_RNAinput1_unbiased
 
 Both [DNAmodel_exctract_results.R](DNA_model/DNAmodel_exctract_results.R) and [RNAmodel_exctract_results.R](RNA_model/RNAmodel_exctract_results.R) source [readGzippedMcmcOutput.R](DNA_model/readGzippedMcmcOutput.R) that may not work correctly with R/3.0.0 and later. The error message states `In readLines(file.gz): seek on a gzfile connection returned an internal error`. It worked only in **R/2.13.0** for me.
 Another workaround is to use uncompressed input (gunzip), but [readGzippedMcmcOutput.R](DNA_model/readGzippedMcmcOutput.R) has to be edited for this type of input.
+
+**DISCLAIMER:** USE THESE SCRIPTS AT YOUR OWN RISK. I MAKE NO WARRANTIES THAT THESE SCRIPTS ARE BUG-FREE, COMPLETE, AND UP-TO-DATE. I AM NOT LIABLE FOR ANY LOSSES IN CONNECTION WITH THE USE OF THESE SCRIPTS.
